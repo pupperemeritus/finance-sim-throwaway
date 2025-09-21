@@ -1,0 +1,124 @@
+# --- Simulation Control ---
+simulation:
+  mc_trials: 200000 # Number of simulations to run. Higher is more accurate but slower.
+  random_seed: 42 # For reproducible results.
+
+# --- Time Configuration ---
+time:
+  days_in_month: 30.4375 # Average days in a month (365.25 / 12)
+  workdays_per_month: 22 # Typical number of workdays.
+
+# --- Personal Financials ---
+financials:
+  monthly_investable_amount: 50000.0
+  active_investment_profile: "Aggressive" # Must match a key in 'investment_profiles'
+
+# --- Investment Profiles ---
+investment_profiles:
+  Conservative:
+    indian_equity: 0.20
+    us_equity: 0.10
+    debt_funds: 0.60
+    gold: 0.10
+  Balanced:
+    indian_equity: 0.35
+    us_equity: 0.15
+    debt_funds: 0.40
+    gold: 0.10
+  Aggressive:
+    indian_equity: 0.50
+    us_equity: 0.25
+    debt_funds: 0.15
+    gold: 0.10
+
+# --- Variable Expenses (Daily Fluctuations) ---
+variable_expenses:
+  # Mean daily spend for categories. Transport is calculated analytically.
+  means:
+    food: 450.0
+    social: 200.0
+  # Standard deviation for daily spend.
+  stds:
+    food: 150.0
+    social: 100.0
+  # Correlation matrix [transport, food, social].
+  # E.g., a positive value between food and social means they tend to increase together.
+  correlation_matrix:
+    - [1.0, 0.2, 0.4] # Row 1: Transport's correlation with (transport, food, social)
+    - [0.2, 1.0, 0.6] # Row 2: Food's correlation with (transport, food, social)
+    - [0.4, 0.6, 1.0] # Row 3: Social's correlation with (transport, food, social)
+  # Seasonality multipliers are handled in the code (e.g., for festivals)
+  seasonality: {}
+
+# --- Transport Details (Used for analytical calculation) ---
+transport:
+  bike_days_per_month: 2.0
+  hitch_days_per_month: 8.0
+  hitch_two_way_frac: 0.6
+  rare_hitch_rapido_prob: 0.05
+  office_oneway_km: 16.0
+  gym_oneway_km: 1.0
+  bike_kmpl: 45.0
+  petrol_price_rs_per_l: 109.5
+  metro_one_way_rs: 50.0
+  rare_rapido_rs: 120.0
+
+# --- Periodic Expenses (Fixed or Semi-Variable) ---
+periodic_expenses:
+  memberships:
+    gym_yearly: 15000.0
+  subscriptions:
+    internet_monthly: 850.0
+    mobile_90_days: 750.0
+    google_one_monthly: 130.0
+    spotify_monthly: 120.0
+    cloud_backup_yearly: 2000.0
+    antivirus_yearly: 1000.0
+    news_monthly: 0.0
+    other_apps_monthly: 100.0
+  household:
+    rent_contribution_monthly: 20000.0
+    society_maintenance_monthly: 2500.0
+    groceries_monthly: 8000.0
+    utilities_monthly: 1500.0
+    emergency_repair_fund_monthly: 500.0
+    appliance_replacement_fund_monthly: 1000.0
+    wfh_equipment_fund_monthly: 500.0
+    seasonal_clothing_yearly: 10000.0
+  family_support:
+    child_elder_care_monthly: 0.0
+    caregiver_wages_monthly: 0.0
+    school_tuition_monthly: 0.0
+    education_fund_monthly: 0.0
+  medical:
+    consumables_monthly: 500.0
+    specialist_consultations_yearly: 3000.0
+    dental_procedures_yearly: 4000.0
+    optical_costs_yearly: 8000.0
+    long_term_meds_monthly: 0.0
+    emergency_buffer_yearly: 10000.0
+    health_checkup_yearly: 5000.0
+  insurance_and_loans:
+    life_insurance_yearly: 25000.0
+    hospitalization_copay_yearly: 5000.0
+    loan_emi_monthly: 0.0
+    credit_card_payment_monthly: 15000.0
+  professional_and_financial:
+    income_tax_provision_yearly: 120000.0
+    bank_charges_yearly: 500.0
+    investment_platform_fees_yearly: 300.0
+    advisory_fees_yearly: 0.0
+    legal_services_yearly: 0.0
+    professional_license_yearly: 0.0
+    tax_filing_assistance_yearly: 1000.0
+    bike_maintenance_mean_monthly: 800.0
+    bike_maintenance_sigma: 0.8 # Controls the variance/skewness of maintenance costs
+  miscellaneous:
+    gifts_and_occasions_yearly: 15000.0
+    donations_monthly: 500.0
+    pet_care_monthly: 0.0
+    inflation_buffer_monthly: 1000.0
+  hobbies:
+    cricket_days_per_month: 2.0
+    cricket_cost_min: 300.0
+    cricket_cost_max: 500.0

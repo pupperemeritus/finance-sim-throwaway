@@ -1,0 +1,59 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "personal-finance-simulator"
+version = "1.0.0"
+description = "A professional-grade tool for simulating and forecasting personal daily expenses using Monte Carlo methods."
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "MIT License" }
+authors = [{ name = "Your Name", email = "you@example.com" }]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+]
+
+# Project dependencies are now listed here
+dependencies = [
+  "numpy",
+  "pandas",
+  "scipy",
+  "pydantic",
+  "pyyaml",
+  "typer",
+  "matplotlib",
+  "seaborn",
+  "rich",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/your-username/personal-finance-simulator"
+"Bug Tracker" = "https://github.com/your-username/personal-finance-simulator/issues"
+
+# This creates a command-line script for easier access
+[project.scripts]
+finance-sim = "main:app"
+
+[project.optional-dependencies]
+test = ["pytest"]
+
+[tool.setuptools]
+# This line tells the installer that `main.py` is a top-level module to be included.
+py-modules = ["main"]
+
+[tool.setuptools.packages.find]
+# This new section tells the installer to find the `src` directory (and its contents)
+# as an installable package so it can be imported.
+include = ["src*"]
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-ra -q"
+testpaths = ["tests"]
+filterwarnings = [
+  "ignore:distutils Version classes are deprecated:DeprecationWarning",
+  "ignore:pkg_resources is deprecated as an API:UserWarning",
+]
