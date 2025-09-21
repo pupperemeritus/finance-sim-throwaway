@@ -17,19 +17,16 @@
 [![Python Version](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-A professional-grade command-line tool for simulating and forecasting personal daily expenses using Monte Carlo methods. It provides detailed financial insights through statistical analysis and data visualization.
+A throwaway repository for a finance simulator I built for amortizing my expenses using Monte Carlo methods. It's a simple CLI tool that reads a config file and spits out some numbers and charts.
 
-This simulator moves beyond simple spreadsheets by modeling the inherent randomness and interconnectedness of daily financial life, helping you understand the _distribution_ of possible outcomes, not just a single average.
+A better version is coming with a far more comprehensive feature set, but this one does the job for now.
 
-## Key Features
+## What it Does
 
-- **Monte Carlo Simulation**: Run hundreds of thousands of trials in seconds for statistically robust results on your daily, monthly, and yearly expense estimates.
-- **Correlated Variables**: Accurately models the relationships between different expense types (e.g., higher social spending might correlate with higher food costs) using a multivariate normal distribution.
-- **Comprehensive Configuration**: Define all your financial variables—from daily discretionary spending to fixed yearly subscriptions—in a single, easy-to-understand YAML file.
-- **Rich Console Reporting**: Generates beautiful, easy-to-read summary tables directly in your terminal using Rich, providing an immediate overview of your financial landscape.
-- **Data Visualization**: Automatically creates and saves insightful charts, including an expense breakdown pie chart and a total daily cost distribution histogram, allowing you to see where your money goes.
-- **Modular & Extensible**: The simulation engine is designed to be easily extended. You can add new, complex financial components (e.g., a stock market model) without altering existing code.
-- **Modern CLI**: Powered by Typer for a clean, user-friendly, and self-documenting command-line experience.
+- **Monte Carlo Simulation**: Runs thousands of simulations to give a statistical distribution of daily expenses, not just a single average.
+- **YAML Configuration**: All financial inputs are defined in a single `config.yaml` file. Just edit the template to match your numbers.
+- **Expense Correlation**: Models the relationship between variable spending (e.g., food and social costs tend to move together).
+- **Basic Reporting**: Prints a summary table to the console and saves a couple of charts (`pie chart` and `histogram`) to a `reports/` folder.
 
 ## Installation
 
@@ -38,7 +35,7 @@ To get started, clone the repository and install the package in an editable mode
 1. **Clone the repository:**
 
    ```bash
-   git clone [https://github.com/pupperemeritus/personal-finance-simulator.git](https://github.com//finance-sim-throwaway.git)
+   git clone https://github.com/pupperemeritus/finance-sim-throwaway.git
    cd finance-sim-throwaway
    ```
 
@@ -110,8 +107,8 @@ After a successful run, you will see two main outputs:
    _Example Console Output:_
 
    ```
-    ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-    ┃                      Expense Simulation Summary (Daily Averages)                      ┃
+    ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+    ┃                      Expense Simulation Summary (Daily Averages)       ┃
     ┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━━━━━━━┩
     │ Expense Category              │ Daily Avg │ Monthly Avg │ Yearly Avg   │
     ├───────────────────────────────┼───────────┼─────────────┼──────────────┤
@@ -123,7 +120,7 @@ After a successful run, you will see two main outputs:
     │ Hobbies                       │   ₹26.29  │    ₹799.98  │   ₹9,599.75  │
     ├───────────────────────────────┴───────────┴─────────────┴──────────────┤
     │ Total Estimated Expenses      │ ₹2,166.45 │ ₹65,938.81  │ ₹791,265.75  │
-    └─────────────────────────────────────────────────────────────────────────┘
+    └────────────────────────────────────────────────────────────────────────┘
    ```
 
 2. **Visual Reports**: Two PNG images will be saved to the `reports/` directory:
@@ -153,11 +150,12 @@ personal-finance-simulator/
 └── README.md                 # This file
 ```
 
-## How It Works: Technical Details
+## How It Works (The Guts)
 
-- **Configuration Loading**: `Pydantic` is used to define a strict schema for the `config.yaml`. This ensures that the configuration is valid before the simulation starts, preventing runtime errors.
-- **Simulation Core**: The `ExpenseModel` class in `model.py` acts as an orchestrator. It maintains a list of "expense components"—functions that simulate a specific part of your finances.
-- **Expense Components**: Each function in `components.py` models a different financial aspect:
-  - `simulate_daily_variable_expenses`: Uses `numpy.random.multivariate_normal` to generate samples of correlated expenses (transport, food, social). This is the statistical heart of the simulation.
-  - `simulate_periodic_expenses`: Converts fixed monthly/yearly costs into a daily average and simulates semi-variable costs like vehicle maintenance using a `lognormal` distribution to model its right-skewed nature (many small costs, few very large costs).
-- **Aggregation**: The main `run_simulation` method calls each registered component, and the results (which are `pandas` DataFrames) are concatenated to form a complete picture of all expenses for every trial.
+For anyone curious, here's a quick technical rundown:
+
+- **Config Validation**: `Pydantic` reads the YAML file and makes sure all the numbers and fields are correct before anything runs.
+- **Simulation Logic**: The core logic is in `src/components.py`.
+  - `simulate_daily_variable_expenses` uses `numpy.random.multivariate_normal` to handle the correlated expenses like food and social spending.
+  - `simulate_periodic_expenses` handles fixed costs by averaging them out per day and simulates semi-variable costs (like bike maintenance) using a `lognormal` distribution.
+- **Orchestration**: `src/model.py` just calls the different simulation functions and stitches the results together into a single `pandas` DataFrame.
